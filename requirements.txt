@@ -1,1 +1,12 @@
+# Environment: conda env "donkeycar_env" (Python 3.10)
+# Install: pip install -r requirements.txt
+
+# Simulator client (pinned commit; installed as gym_donkeycar 1.3.1)
 gym-donkeycar @ git+https://github.com/tawnkramer/gym-donkeycar.git@a1f4ca6961e17a6929c1f2e883358a1edafb479d
+
+# Used by the current scripts (versions currently installed in donkeycar_env)
+numpy==2.2.6
+pillow==12.3.0
+
+# Needed from Step 4 (manual driving with gamepad/keyboard) - not installed yet
+# pygame

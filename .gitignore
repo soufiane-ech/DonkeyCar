@@ -1,0 +1,21 @@
+# --- Recorded data (large, regenerable) ---
+data/
+camera/
+camera_b.png
+
+# --- Trained models / training outputs ---
+models/
+runs/
+*.pt
+*.pth
+*.h5
+*.keras
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# --- OS / editors ---
+.DS_Store
+Thumbs.db

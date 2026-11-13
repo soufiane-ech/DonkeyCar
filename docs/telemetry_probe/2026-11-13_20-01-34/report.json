@@ -1,0 +1,721 @@
+{
+  "generated": "2026-11-13T20:01:46",
+  "args": {
+    "host": "127.0.0.1",
+    "port": 9091,
+    "scene": "roboracingleague_1",
+    "img_w": 160,
+    "img_h": 120,
+    "img_enc": "PNG",
+    "fov": 0,
+    "test_w": 128,
+    "test_h": 96,
+    "no_drive": true,
+    "out": "C:\\Users\\user\\Documents\\5eme_ann\u00e9e\\DonkeyCar\\docs\\telemetry_probe",
+    "verbose": false
+  },
+  "python": "3.10.22",
+  "connection": {
+    "scene_already_loaded": true,
+    "car_loaded_msg": true,
+    "telemetry_before_config": true
+  },
+  "message_type_counts": {
+    "car_loaded": 1,
+    "telemetry": 234
+  },
+  "telemetry_frames": 234,
+  "telemetry_fields": {
+    "accel_x": {
+      "present_pct": 100.0,
+      "types": {
+        "float": 234
+      },
+      "first": 0.285771071910858,
+      "last": 5.7594883173806e-07,
+      "min": -0.136717349290848,
+      "max": 0.285771071910858,
+      "mean": 0.00075
+    },
+    "accel_y": {
+      "present_pct": 100.0,
+      "types": {
+        "float": 234
+      },
+      "first": -8.98474502563477,
+      "last": -5.21263382324832e-06,
+      "min": -8.98474502563477,
+      "max": 1.26558864116669,
+      "mean": -0.05642
+    },
+    "accel_z": {
+      "present_pct": 100.0,
+      "types": {
+        "float": 234
+      },
+      "first": 0.0606099627912045,
+      "last": -1.28959641187976e-06,
+      "min": -0.432172834873199,
+      "max": 0.186460882425308,
+      "mean": -0.00107
+    },
+    "activeNode": {
+      "present_pct": 100.0,
+      "types": {
+        "int": 234
+      },
+      "first": 144,
+      "last": 0,
+      "min": 0,
+      "max": 144,
+      "mean": 117.53846
+    },
+    "cte": {
+      "present_pct": 100.0,
+      "types": {
+        "float": 234
+      },
+      "first": 0.0620483905076981,
+      "last": 0.211262166500092,
+      "min": 0.0620483905076981,
+      "max": 0.211532860994339,
+      "mean": 0.09211
+    },
+    "front_left_odom": {
+      "present_pct": 100.0,
+      "types": {
+        "float": 234
+      },
+      "first": 1.30423923110357e-05,
+      "last": 0.0497409177751251,
+      "min": 1.30423923110357e-05,
+      "max": 0.0497409177751251,
+      "mean": 0.02476
+    },
+    "front_right_odom": {
+      "present_pct": 100.0,
+      "types": {
+        "float": 234
+      },
+      "first": 9.35209318413399e-05,
+      "last": 0.0498317857636721,
+      "min": 9.35209318413399e-05,
+      "max": 0.0498317857636721,
+      "mean": 0.02485
+    },
+    "gyro_x": {
+      "present_pct": 100.0,
+      "types": {
+        "float": 234
+      },
+      "first": -0.043105024844408,
+      "last": 1.63914947393096e-07,
+      "min": -0.043105024844408,
+      "max": 0.0238387789577246,
+      "mean": -0.00022
+    },
+    "gyro_y": {
+      "present_pct": 100.0,
+      "types": {
+        "float": 234
+      },
+      "first": -0.000163866207003593,
+      "last": -1.65450728673022e-08,
+      "min": -0.000163866207003593,
+      "max": 4.57384521723725e-05,
+      "mean": -0.0
+    },
+    "gyro_z": {
+      "present_pct": 100.0,
+      "types": {
+        "float": 234
+      },
+      "first": -0.15308740735054,
+      "last": -5.92595540638285e-07,
+      "min": -0.15308740735054,
+      "max": 0.0767657831311226,
+      "mean": -0.00067
+    },
+    "hit": {
+      "present_pct": 100.0,
+      "types": {
+        "str": 234
+      },
+      "first": "none",
+      "last": "none",
+      "unique_strings": [
+        "none"
+      ]
+    },
+    "image__b64len": {
+      "present_pct": 100.0,
+      "types": {
+        "int": 234
+      },
+      "first": 6556,
+      "last": 43616,
+      "min": 6548,
+      "max": 43688,
+      "mean": 36746.71795
+    },
+    "msg_type": {
+      "present_pct": 100.0,
+      "types": {
+        "str": 234
+      },
+      "first": "telemetry",
+      "last": "telemetry",
+      "unique_strings": [
+        "telemetry"
+      ]
+    },
+    "pitch": {
+      "present_pct": 100.0,
+      "types": {
+        "float": 234
+      },
+      "first": 359.914520263672,
+      "last": 359.990570068359,
+      "min": 0.0148829659447074,
+      "max": 359.991668701172,
+      "mean": 355.37494
+    },
+    "pos_x": {
+      "present_pct": 100.0,
+      "types": {
+        "float": 234
+      },
+      "first": 2.98309230804443,
+      "last": 2.98301076889038,
+      "min": 2.98288679122925,
+      "max": 2.98313570022583,
+      "mean": 2.98301
+    },
+    "pos_y": {
+      "present_pct": 100.0,
+      "types": {
+        "float": 234
+      },
+      "first": 0.0715838968753815,
+      "last": 0.0699893534183502,
+      "min": 0.0686410069465637,
+      "max": 0.0715838968753815,
+      "mean": 0.06999
+    },
+    "pos_z": {
+      "present_pct": 100.0,
+      "types": {
+        "float": 234
+      },
+      "first": -3.2447075843811,
+      "last": -3.24400401115417,
+      "min": -3.2447075843811,
+      "max": -3.24397039413452,
+      "mean": -3.24425
+    },
+    "rear_left_odom": {
+      "present_pct": 100.0,
+      "types": {
+        "float": 234
+      },
+      "first": 1.4031311366125e-05,
+      "last": 0.0501695213151834,
+      "min": 1.4031311366125e-05,
+      "max": 0.0501695213151834,
+      "mean": 0.0252
+    },
+    "rear_right_odom": {
+      "present_pct": 100.0,
+      "types": {
+        "float": 234
+      },
+      "first": 9.35210773604922e-05,
+      "last": 0.0502589319003164,
+      "min": 9.35210773604922e-05,
+      "max": 0.0502589319003164,
+      "mean": 0.02529
+    },
+    "roll": {
+      "present_pct": 100.0,
+      "types": {
+        "float": 234
+      },
+      "first": 0.0624589659273624,
+      "last": 0.00481277238577604,
+      "min": -0.00432769767940044,
+      "max": 359.974334716797,
+      "mean": 1.54346
+    },
+    "speed": {
+      "present_pct": 100.0,
+      "types": {
+        "float": 234
+      },
+      "first": 0.104487083852291,
+      "last": 1.9457156952285e-07,
+      "min": 1.0101048886213e-08,
+      "max": 0.274932652711868,
+      "mean": 0.00214
+    },
+    "steering_angle": {
+      "present_pct": 100.0,
+      "types": {
+        "int": 193,
+        "float": 41
+      },
+      "first": 0,
+      "last": 0,
+      "min": -1,
+      "max": 1,
+      "mean": 0.00214
+    },
+    "throttle": {
+      "present_pct": 100.0,
+      "types": {
+        "int": 234
+      },
+      "first": 0,
+      "last": 0,
+      "min": 0,
+      "max": 0,
+      "mean": 0.0
+    },
+    "time": {
+      "present_pct": 100.0,
+      "types": {
+        "float": 234
+      },
+      "first": 2415.7568359375,
+      "last": 2427.40698242188,
+      "min": 2415.7568359375,
+      "max": 2427.40698242188,
+      "mean": 2421.58189
+    },
+    "totalNodes": {
+      "present_pct": 100.0,
+      "types": {
+        "int": 234
+      },
+      "first": 147,
+      "last": 147,
+      "min": 147,
+      "max": 147,
+      "mean": 147.0
+    },
+    "vel_x": {
+      "present_pct": 100.0,
+      "types": {
+        "float": 234
+      },
+      "first": -0.00368263432756066,
+      "last": 4.84952744628231e-09,
+      "min": -0.00368263432756066,
+      "max": 0.00131393666379154,
+      "mean": 2e-05
+    },
+    "vel_y": {
+      "present_pct": 100.0,
+      "types": {
+        "float": 234
+      },
+      "first": 0.104309469461441,
+      "last": -1.93615576904449e-07,
+      "min": -0.0494702458381653,
+      "max": 0.274902313947678,
+      "mean": 0.00125
+    },
+    "vel_z": {
+      "present_pct": 100.0,
+      "types": {
+        "float": 234
+      },
+      "first": -0.0048500900156796,
+      "last": -1.86436324156603e-08,
+      "min": -0.0048500900156796,
+      "max": 0.00246144109405577,
+      "mean": -2e-05
+    },
+    "yaw": {
+      "present_pct": 100.0,
+      "types": {
+        "float": 234
+      },
+      "first": 270.002685546875,
+      "last": 269.999938964844,
+      "min": 269.999938964844,
+      "max": 270.002777099609,
+      "mean": 270.00221
+    }
+  },
+  "expected_fields_check": {
+    "library": {
+      "image": true,
+      "pos_x": true,
+      "pos_y": true,
+      "pos_z": true,
+      "speed": true,
+      "vel_x": true,
+      "vel_y": true,
+      "vel_z": true,
+      "gyro_x": true,
+      "gyro_y": true,
+      "gyro_z": true,
+      "accel_x": true,
+      "accel_y": true,
+      "accel_z": true,
+      "roll": true,
+      "pitch": true,
+      "yaw": true,
+      "cte": true,
+      "hit": true
+    },
+    "unverified": {
+      "steering_angle": true,
+      "throttle": true,
+      "time": true,
+      "activeNode": true,
+      "totalNodes": true
+    }
+  },
+  "unexpected_fields": [
+    "front_left_odom",
+    "front_right_odom",
+    "rear_left_odom",
+    "rear_right_odom"
+  ],
+  "images_by_phase": {
+    "default_cam": {
+      "sizes": {
+        "160x120": 20
+      },
+      "modes": {
+        "RGB": 20
+      },
+      "formats": {
+        "JPEG": 20
+      },
+      "mean_bytes": 4923,
+      "decode_errors": 0
+    },
+    "config": {
+      "sizes": {
+        "160x120": 22
+      },
+      "modes": {
+        "RGB": 22
+      },
+      "formats": {
+        "JPEG": 22
+      },
+      "mean_bytes": 5091,
+      "decode_errors": 0
+    },
+    "cam_test": {
+      "sizes": {
+        "160x120": 1,
+        "128x96": 1
+      },
+      "modes": {
+        "RGB": 2
+      },
+      "formats": {
+        "JPEG": 1,
+        "PNG": 1
+      },
+      "mean_bytes": 13584,
+      "decode_errors": 0
+    },
+    "cam_target": {
+      "sizes": {
+        "128x96": 1,
+        "160x120": 2
+      },
+      "modes": {
+        "RGB": 3
+      },
+      "formats": {
+        "PNG": 3
+      },
+      "mean_bytes": 29184,
+      "decode_errors": 0
+    },
+    "idle": {
+      "sizes": {
+        "160x120": 40
+      },
+      "modes": {
+        "RGB": 40
+      },
+      "formats": {
+        "PNG": 40
+      },
+      "mean_bytes": 32760,
+      "decode_errors": 0
+    },
+    "steer_-1.0": {
+      "sizes": {
+        "160x120": 20
+      },
+      "modes": {
+        "RGB": 20
+      },
+      "formats": {
+        "PNG": 20
+      },
+      "mean_bytes": 32760,
+      "decode_errors": 0
+    },
+    "steer_-0.5": {
+      "sizes": {
+        "160x120": 22
+      },
+      "modes": {
+        "RGB": 22
+      },
+      "formats": {
+        "PNG": 22
+      },
+      "mean_bytes": 32760,
+      "decode_errors": 0
+    },
+    "steer_+0.0": {
+      "sizes": {
+        "160x120": 19
+      },
+      "modes": {
+        "RGB": 19
+      },
+      "formats": {
+        "PNG": 19
+      },
+      "mean_bytes": 32760,
+      "decode_errors": 0
+    },
+    "steer_+0.5": {
+      "sizes": {
+        "160x120": 20
+      },
+      "modes": {
+        "RGB": 20
+      },
+      "formats": {
+        "PNG": 20
+      },
+      "mean_bytes": 32760,
+      "decode_errors": 0
+    },
+    "steer_+1.0": {
+      "sizes": {
+        "160x120": 22
+      },
+      "modes": {
+        "RGB": 22
+      },
+      "formats": {
+        "PNG": 22
+      },
+      "mean_bytes": 32760,
+      "decode_errors": 0
+    },
+    "idle_after_reset": {
+      "sizes": {
+        "160x120": 44
+      },
+      "modes": {
+        "RGB": 44
+      },
+      "formats": {
+        "PNG": 44
+      },
+      "mean_bytes": 32706,
+      "decode_errors": 0
+    }
+  },
+  "cam_config_tests": {
+    "test": {
+      "requested": [
+        128,
+        96
+      ],
+      "applied": true,
+      "latency_s": 0.065,
+      "sizes_seen_after_send": {
+        "160x120": 1,
+        "128x96": 1
+      }
+    },
+    "target": {
+      "requested": [
+        160,
+        120
+      ],
+      "applied": true,
+      "latency_s": 0.168,
+      "sizes_seen_after_send": {
+        "128x96": 1,
+        "160x120": 2
+      }
+    }
+  },
+  "rate_local_clock": {
+    "frames": 187,
+    "span_s": 9.324,
+    "fps": 19.95,
+    "dt_median_ms": 48.81,
+    "dt_p95_ms": 72.71,
+    "dt_max_ms": 101.36,
+    "gaps_over_100ms": 1
+  },
+  "rate_sim_time_field": {
+    "frames": 187,
+    "span_s": 9.3,
+    "fps": 20.0,
+    "dt_median_ms": 50.05,
+    "dt_p95_ms": 50.05,
+    "dt_max_ms": 50.05,
+    "gaps_over_100ms": 0
+  },
+  "phases": [
+    {
+      "phase": "idle",
+      "steering": 0.0,
+      "throttle": 0.0,
+      "brake": 0.0,
+      "frames": 34,
+      "echo_steering_angle_mean": 0.0,
+      "echo_throttle_mean": 0.0,
+      "echo_speed_mean": 0.0,
+      "echo_cte_mean": 0.0655,
+      "echo_activeNode_mean": 144.0,
+      "pos_xz_start": [
+        2.983,
+        -3.244
+      ],
+      "pos_xz_end": [
+        2.983,
+        -3.244
+      ]
+    },
+    {
+      "phase": "steer_-1.0",
+      "steering": -1.0,
+      "throttle": 0.0,
+      "brake": 0.0,
+      "frames": 14,
+      "echo_steering_angle_mean": -1.0,
+      "echo_throttle_mean": 0.0,
+      "echo_speed_mean": 0.0,
+      "echo_cte_mean": 0.0655,
+      "echo_activeNode_mean": 144.0,
+      "pos_xz_start": [
+        2.983,
+        -3.244
+      ],
+      "pos_xz_end": [
+        2.983,
+        -3.244
+      ]
+    },
+    {
+      "phase": "steer_-0.5",
+      "steering": -0.5,
+      "throttle": 0.0,
+      "brake": 0.0,
+      "frames": 16,
+      "echo_steering_angle_mean": -0.5,
+      "echo_throttle_mean": 0.0,
+      "echo_speed_mean": 0.0,
+      "echo_cte_mean": 0.0655,
+      "echo_activeNode_mean": 144.0,
+      "pos_xz_start": [
+        2.983,
+        -3.244
+      ],
+      "pos_xz_end": [
+        2.983,
+        -3.244
+      ]
+    },
+    {
+      "phase": "steer_+0.0",
+      "steering": 0.0,
+      "throttle": 0.0,
+      "brake": 0.0,
+      "frames": 13,
+      "echo_steering_angle_mean": 0.0,
+      "echo_throttle_mean": 0.0,
+      "echo_speed_mean": 0.0,
+      "echo_cte_mean": 0.0655,
+      "echo_activeNode_mean": 144.0,
+      "pos_xz_start": [
+        2.983,
+        -3.244
+      ],
+      "pos_xz_end": [
+        2.983,
+        -3.244
+      ]
+    },
+    {
+      "phase": "steer_+0.5",
+      "steering": 0.5,
+      "throttle": 0.0,
+      "brake": 0.0,
+      "frames": 14,
+      "echo_steering_angle_mean": 0.5,
+      "echo_throttle_mean": 0.0,
+      "echo_speed_mean": 0.0,
+      "echo_cte_mean": 0.0655,
+      "echo_activeNode_mean": 144.0,
+      "pos_xz_start": [
+        2.983,
+        -3.244
+      ],
+      "pos_xz_end": [
+        2.983,
+        -3.244
+      ]
+    },
+    {
+      "phase": "steer_+1.0",
+      "steering": 1.0,
+      "throttle": 0.0,
+      "brake": 0.0,
+      "frames": 15,
+      "echo_steering_angle_mean": 1.0,
+      "echo_throttle_mean": 0.0,
+      "echo_speed_mean": 0.0,
+      "echo_cte_mean": 0.0655,
+      "echo_activeNode_mean": 144.0,
+      "pos_xz_start": [
+        2.983,
+        -3.244
+      ],
+      "pos_xz_end": [
+        2.983,
+        -3.244
+      ]
+    },
+    {
+      "phase": "idle_after_reset",
+      "steering": 0.0,
+      "throttle": 0.0,
+      "brake": 0.0,
+      "frames": 39,
+      "echo_steering_angle_mean": 0.0,
+      "echo_throttle_mean": 0.0,
+      "echo_speed_mean": 0.0001,
+      "echo_cte_mean": 0.2113,
+      "echo_activeNode_mean": 0.0,
+      "pos_xz_start": [
+        2.983,
+        -3.244
+      ],
+      "pos_xz_end": [
+        2.983,
+        -3.244
+      ]
+    }
+  ],
+  "warnings": []
+}
