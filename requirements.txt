@@ -1,0 +1,1 @@
+gym-donkeycar @ git+https://github.com/tawnkramer/gym-donkeycar.git@a1f4ca6961e17a6929c1f2e883358a1edafb479d
