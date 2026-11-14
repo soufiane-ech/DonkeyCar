@@ -5,6 +5,9 @@ direction, accélérateur et frein. Il a appris en imitant un pilote automatique
 (« enseignant ») qui, lui, utilise les informations internes du simulateur
 (tracé de la piste, écart au centre). Aucune conduite humaine n'est nécessaire.
 
+**Pour tout comprendre :
+[docs/GUIDE_COMPLET.md](docs/GUIDE_COMPLET.md).**
+
 ## Résultat final
 
 Modèle recommandé : **`models/cnn_fast_v1.pt`** (modèle par défaut de `run_driver.py`).
