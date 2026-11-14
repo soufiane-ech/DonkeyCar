@@ -7,7 +7,6 @@ Plan :
 1. [Le projet en une page](#1-le-projet-en-une-page)
 2. [Les outils utilisés](#2-les-outils-utilisés)
 3. [Les notions indispensables](#3-les-notions-indispensables)
-4. [Ordre de lecture du code](#4-ordre-de-lecture-du-code)
 5. [Niveau 1 — Fondations : parler au simulateur](#5-niveau-1--fondations--parler-au-simulateur)
 6. [Niveau 2 — Données : enregistrer et vérifier](#6-niveau-2--données--enregistrer-et-vérifier)
 7. [Niveau 3 — L'intelligence : l'enseignant et le CNN](#7-niveau-3--lintelligence--lenseignant-et-le-cnn)
@@ -167,39 +166,6 @@ programme est lent, des images s'accumulent : pour conduire il faut toujours uti
 **la plus récente** ; pour enregistrer il faut les garder **toutes, dans l'ordre**.
 Une commande met ≈ 2 images (100 ms) à être appliquée (mesuré).
 
----
-
-## 4. Ordre de lecture du code
-
-Le code est rangé en **couches** : chaque couche n'utilise que les couches en dessous.
-Lis dans cet ordre :
-
-```
-Niveau 5  tools/      diagnostics, optimisation de l'enseignant
-Niveau 4  scripts/    run_driver.py, train_cnn.py, validate_session.py, drive_manual.py
-Niveau 3  donkey/     autopilot.py (enseignant), cnn.py (CNN), controllers.py (clavier)
-Niveau 2  donkey/     recorder.py (enregistrer), session.py (relire, valider)
-Niveau 1  donkey/     config.py (réglages), telemetry.py (décodage), sim_client.py (connexion)
-```
-
-| Fichier | Lignes | Importance |
-|---|---|---|
-| [donkey/config.py](../donkey/config.py) | 94 | ★★ |
-| [donkey/telemetry.py](../donkey/telemetry.py) | 148 | ★★ |
-| [donkey/sim_client.py](../donkey/sim_client.py) | 319 | ★★★ |
-| [donkey/recorder.py](../donkey/recorder.py) | 294 | ★★ |
-| [donkey/session.py](../donkey/session.py) | 137 | ★ |
-| [donkey/autopilot.py](../donkey/autopilot.py) | 119 | ★★★ |
-| [donkey/cnn.py](../donkey/cnn.py) | 78 | ★★★ |
-| [donkey/controllers.py](../donkey/controllers.py) | 99 | ☆ (conduite manuelle) |
-| [scripts/run_driver.py](../scripts/run_driver.py) | 240 | ★★★ |
-| [scripts/train_cnn.py](../scripts/train_cnn.py) | 153 | ★★★ |
-| [scripts/validate_session.py](../scripts/validate_session.py) | 89 | ★ |
-| [scripts/drive_manual.py](../scripts/drive_manual.py) | 308 | ☆ |
-| [tools/tune_teacher.py](../tools/tune_teacher.py) | 148 | ★★ |
-| autres `tools/` | — | ☆ (diagnostics) |
-
-★★★ = cœur du projet, ★★ = important, ★ = utile, ☆ = optionnel.
 
 ---
 
