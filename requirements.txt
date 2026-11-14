@@ -8,5 +8,9 @@ gym-donkeycar @ git+https://github.com/tawnkramer/gym-donkeycar.git@a1f4ca6961e1
 numpy==2.2.6
 pillow==12.3.0
 
-# Needed from Step 4 (manual driving with gamepad/keyboard) - not installed yet
-# pygame
+# Manual driving window (keyboard + camera preview), Step 4
+pygame==2.6.1
+
+# CNN training / driving (CPU build):
+#   pip install torch==2.14.1 --index-url https://download.pytorch.org/whl/cpu
+torch==2.14.1

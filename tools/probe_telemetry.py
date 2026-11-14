@@ -16,8 +16,8 @@ The car only moves gently (throttle 0.2 for 2 s) unless --no-drive is given.
 
 Usage (simulator running, from the project root):
     conda activate donkeycar_env
-    python scripts/probe_telemetry.py
-    python scripts/probe_telemetry.py --scene roboracingleague_1 --no-drive
+    python tools/probe_telemetry.py
+    python tools/probe_telemetry.py --scene roboracingleague_1 --no-drive
 """
 
 import argparse

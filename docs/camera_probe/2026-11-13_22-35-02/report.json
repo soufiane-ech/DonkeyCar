@@ -1,0 +1,249 @@
+{
+  "seconds": 4.0,
+  "throttle": 0.0,
+  "results": {
+    "320x240": {
+      "applied": true,
+      "apply_s": 0.16,
+      "got": [
+        320,
+        240
+      ],
+      "format": "png",
+      "frames": 80,
+      "wall_fps": 19.96,
+      "sim_dt_ms_median": 49.99,
+      "sim_speed_ratio": 0.998,
+      "sim_time_gaps": 0,
+      "client_id_skips": 0,
+      "kb_per_frame": 108.9,
+      "decode_ms": 8.7,
+      "preview_ms": 4.28,
+      "mean_brightness": 105.3,
+      "config": {
+        "img_w": 320,
+        "img_h": 240,
+        "img_d": 3,
+        "img_enc": "PNG",
+        "fov": 0,
+        "fish_eye_x": 0.0,
+        "fish_eye_y": 0.0,
+        "offset_x": 0.0,
+        "offset_y": 0.0,
+        "offset_z": 0.0,
+        "rot_x": 0.0,
+        "rot_y": 0.0,
+        "rot_z": 0.0
+      }
+    },
+    "320x240_tilt10": {
+      "applied": true,
+      "apply_s": 0.01,
+      "got": [
+        320,
+        240
+      ],
+      "format": "png",
+      "frames": 81,
+      "wall_fps": 20.03,
+      "sim_dt_ms_median": 49.99,
+      "sim_speed_ratio": 1.001,
+      "sim_time_gaps": 0,
+      "client_id_skips": 0,
+      "kb_per_frame": 107.8,
+      "decode_ms": 4.97,
+      "preview_ms": 3.12,
+      "mean_brightness": 105.9,
+      "config": {
+        "img_w": 320,
+        "img_h": 240,
+        "img_d": 3,
+        "img_enc": "PNG",
+        "fov": 0,
+        "fish_eye_x": 0.0,
+        "fish_eye_y": 0.0,
+        "offset_x": 0.0,
+        "offset_y": 0.0,
+        "offset_z": 0.0,
+        "rot_x": 10,
+        "rot_y": 0.0,
+        "rot_z": 0.0
+      }
+    },
+    "320x240_tilt20": {
+      "applied": true,
+      "apply_s": 0.04,
+      "got": [
+        320,
+        240
+      ],
+      "format": "png",
+      "frames": 79,
+      "wall_fps": 19.75,
+      "sim_dt_ms_median": 49.99,
+      "sim_speed_ratio": 0.987,
+      "sim_time_gaps": 0,
+      "client_id_skips": 0,
+      "kb_per_frame": 108.1,
+      "decode_ms": 6.33,
+      "preview_ms": 3.73,
+      "mean_brightness": 106.5,
+      "config": {
+        "img_w": 320,
+        "img_h": 240,
+        "img_d": 3,
+        "img_enc": "PNG",
+        "fov": 0,
+        "fish_eye_x": 0.0,
+        "fish_eye_y": 0.0,
+        "offset_x": 0.0,
+        "offset_y": 0.0,
+        "offset_z": 0.0,
+        "rot_x": 20,
+        "rot_y": 0.0,
+        "rot_z": 0.0
+      }
+    },
+    "320x240_fov110": {
+      "applied": true,
+      "apply_s": 0.04,
+      "got": [
+        320,
+        240
+      ],
+      "format": "png",
+      "frames": 81,
+      "wall_fps": 19.95,
+      "sim_dt_ms_median": 49.99,
+      "sim_speed_ratio": 0.998,
+      "sim_time_gaps": 0,
+      "client_id_skips": 0,
+      "kb_per_frame": 107.7,
+      "decode_ms": 4.31,
+      "preview_ms": 3.12,
+      "mean_brightness": 110.5,
+      "config": {
+        "img_w": 320,
+        "img_h": 240,
+        "img_d": 3,
+        "img_enc": "PNG",
+        "fov": 110,
+        "fish_eye_x": 0.0,
+        "fish_eye_y": 0.0,
+        "offset_x": 0.0,
+        "offset_y": 0.0,
+        "offset_z": 0.0,
+        "rot_x": 0.0,
+        "rot_y": 0.0,
+        "rot_z": 0.0
+      }
+    },
+    "320x240_fov110_tilt10": {
+      "applied": true,
+      "apply_s": 0.03,
+      "got": [
+        320,
+        240
+      ],
+      "format": "png",
+      "frames": 80,
+      "wall_fps": 19.95,
+      "sim_dt_ms_median": 49.99,
+      "sim_speed_ratio": 0.998,
+      "sim_time_gaps": 0,
+      "client_id_skips": 0,
+      "kb_per_frame": 107.5,
+      "decode_ms": 4.41,
+      "preview_ms": 2.8,
+      "mean_brightness": 110.0,
+      "config": {
+        "img_w": 320,
+        "img_h": 240,
+        "img_d": 3,
+        "img_enc": "PNG",
+        "fov": 110,
+        "fish_eye_x": 0.0,
+        "fish_eye_y": 0.0,
+        "offset_x": 0.0,
+        "offset_y": 0.0,
+        "offset_z": 0.0,
+        "rot_x": 10,
+        "rot_y": 0.0,
+        "rot_z": 0.0
+      }
+    },
+    "320x240_up02_tilt15": {
+      "applied": true,
+      "apply_s": 0.01,
+      "got": [
+        320,
+        240
+      ],
+      "format": "png",
+      "frames": 80,
+      "wall_fps": 19.91,
+      "sim_dt_ms_median": 49.99,
+      "sim_speed_ratio": 0.995,
+      "sim_time_gaps": 0,
+      "client_id_skips": 0,
+      "kb_per_frame": 97.0,
+      "decode_ms": 4.14,
+      "preview_ms": 2.8,
+      "mean_brightness": 77.7,
+      "config": {
+        "img_w": 320,
+        "img_h": 240,
+        "img_d": 3,
+        "img_enc": "PNG",
+        "fov": 0,
+        "fish_eye_x": 0.0,
+        "fish_eye_y": 0.0,
+        "offset_x": 0.0,
+        "offset_y": 0.2,
+        "offset_z": 0.0,
+        "rot_x": 15,
+        "rot_y": 0.0,
+        "rot_z": 0.0
+      }
+    },
+    "320x240_fwd05": {
+      "applied": true,
+      "apply_s": 0.02,
+      "got": [
+        320,
+        240
+      ],
+      "format": "png",
+      "frames": 80,
+      "wall_fps": 20.01,
+      "sim_dt_ms_median": 49.99,
+      "sim_speed_ratio": 1.001,
+      "sim_time_gaps": 0,
+      "client_id_skips": 0,
+      "kb_per_frame": 93.5,
+      "decode_ms": 4.09,
+      "preview_ms": 2.88,
+      "mean_brightness": 76.8,
+      "config": {
+        "img_w": 320,
+        "img_h": 240,
+        "img_d": 3,
+        "img_enc": "PNG",
+        "fov": 0,
+        "fish_eye_x": 0.0,
+        "fish_eye_y": 0.0,
+        "offset_x": 0.0,
+        "offset_y": 0.0,
+        "offset_z": 0.5,
+        "rot_x": 0.0,
+        "rot_y": 0.0,
+        "rot_z": 0.0
+      }
+    }
+  },
+  "start": {
+    "scene_requested": "roboracingleague_1",
+    "scene_loaded_by_us": false,
+    "camera_verified": true
+  }
+}
