@@ -27,6 +27,37 @@ Le premier tour (~17,3 s) part de l'arrêt.
 Tour propre le plus rapide obtenu par un CNN : **15,55 s** (`cnn_aggr_v1`), mais ce
 modèle sort 3 fois en 4 min → non retenu.
 
+## Modèle multi-pistes : `models/cnn_multi_v1.pt`
+
+Un seul CNN pour **roboracingleague_1, generated_track et circuit_launch**, fait de la même
+façon que `cnn_fast_v1` (qui reste inchangé, le meilleur sur roboracingleague_1).
+
+| Évaluation de 4 min, CNN seul | Tours sans sortie | Sorties | Tour lancé moyen | Enseignant |
+|---|---|---|---|---|
+| roboracingleague_1 | 14 / 14 | 0 | 16,00 s | 15,43 s |
+| generated_track | 18 / 18 | 0 | 8,86 s | 8,20 s |
+| circuit_launch | 15 / 15 | 0 | 14,97 s | 14,43 s |
+
+Recette :
+1. Enseignant réglé **par piste** (`tools/tune_teacher.py --scene ...`) :
+   `models/profiles/teacher_generated_track.json` (9,85 → 8,2 s),
+   `teacher_circuit_launch.json` (18,25 → 14,43 s), `teacher_fast_v1.json` pour roboracingleague_1.
+2. Collecte avec bruit : generated_track 8 407 images, circuit_launch 11 695 images,
+   + les sessions `fast_noise` et `fast_dagger1` de roboracingleague_1.
+3. Entraînement (`--flip --color --balance --init models/cnn_fast_v1.pt`, 10 époques) :
+   miroir gauche/droite, couleurs/saturation/ombres/bruit, chaque piste pèse autant.
+4. Règle de l'enseignant appliquée au CNN : **pas de frein sous 2,7** (`min_brake_speed` dans
+   le modèle). Sans elle, le CNN freinait jusqu'à l'arrêt au virage après le départ de
+   generated_track et restait bloqué.
+
+Particularités : sur `circuit_launch` la voiture démarre à côté du tracé (|cte| ≈ 4, route
+large) → les sorties ne sont comptées qu'après avoir rejoint le centre. Sur `generated_track`
+le simulateur tourne à ≈ 0,4× le temps réel sur ce PC (les temps restent en temps simulé).
+
+```
+python scripts/run_driver.py --driver cnn --model models/cnn_multi_v1.pt --scene generated_track --laps 3
+```
+
 ## Approches testées (4 h, CPU seul)
 
 Chronologie des temps au tour lancé (pilote automatique = enseignant) :

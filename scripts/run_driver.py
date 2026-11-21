@@ -82,6 +82,9 @@ def main() -> int:
     ap.add_argument("--max-departures", type=int, default=0, help="stop after N departures (0 = never)")
     ap.add_argument("--json-out", default=None, help="append the summary (one JSON line) to this file")
     ap.add_argument("--label", default="", help="free text stored in the JSON summary")
+    ap.add_argument("--scene", default=None,
+                    help="track to load, e.g. generated_track, circuit_launch (implies --reload)")
+    ap.add_argument("--reload", action="store_true", help="exit the current scene and reload it")
     ap.add_argument("--quiet", action="store_true")
     ap.add_argument("--verbose", action="store_true", help="print state every second")
     args = ap.parse_args()
@@ -105,8 +108,9 @@ def main() -> int:
     lap_ok = True
     stats = {"skipped": 0, "frames": 0, "departures": 0, "collisions": 0, "stuck": 0, "speed": [], "abs_cte": []}
     rec = None
-    with DonkeyClient(SimConfig()) as client:
-        info = client.start()
+    sim_cfg = SimConfig(scene=args.scene) if args.scene else SimConfig()
+    with DonkeyClient(sim_cfg) as client:
+        info = client.start(force_reload=args.reload or bool(args.scene))
         first = client.get_frame(timeout=2.0)
         profile = None
         if args.profile:
@@ -129,8 +133,9 @@ def main() -> int:
         last = client.get_frame(timeout=2.0)
 
         def do_reset(reason):
-            nonlocal cooldown_until, lap_ok
+            nonlocal cooldown_until, lap_ok, armed, reset_time
             lap_ok = True
+            armed, reset_time = False, last.sim_time
             client.reset_car()
             teacher.reset()
             laps.restart()
@@ -139,6 +144,9 @@ def main() -> int:
             cooldown_until = last.sim_time + args.cooldown
 
         cooldown_until = None
+        # departure check starts once the car reached the centre line (|cte| < 1): some
+        # tracks (circuit_launch) spawn the car beside it, |cte| ~ 4 on a wide road
+        armed, reset_time = False, 0.0
         do_reset("start")
         slow_since = None
         t_end = time.perf_counter() + 60 * args.minutes
@@ -188,7 +196,9 @@ def main() -> int:
                     print(f"LAP {laps.laps}: {laps.lap_times[-1]:.2f} s")
                 if args.laps and laps.laps >= args.laps:
                     break
-            if abs(tel.cte) > args.cte_limit or tel.hit != "none":
+            armed = armed or abs(tel.cte) < 1.0
+            off = abs(tel.cte) > args.cte_limit and (armed or tel.sim_time - reset_time > 5.0)
+            if off or tel.hit != "none":
                 lap_ok = False
 
             slow_since = (slow_since or tel.sim_time) if tel.speed < 0.3 else None
@@ -196,7 +206,7 @@ def main() -> int:
                 stats["collisions"] += 1
                 print(f"collision with {tel.hit} at node {tel.active_node}")
                 do_reset("hit")
-            elif abs(tel.cte) > args.cte_limit:
+            elif off:
                 stats["departures"] += 1
                 print(f"track departure (cte {tel.cte:+.2f}) at node {tel.active_node}")
                 do_reset("off_track")
@@ -220,7 +230,7 @@ def main() -> int:
         "mean_abs_cte": round(statistics.fmean(stats["abs_cte"]), 3) if stats["abs_cte"] else None,
         "max_abs_cte": round(max(stats["abs_cte"]), 3) if stats["abs_cte"] else None,
     }
-    summary = {"label": args.label, "model": args.model if cnn else None,
+    summary = {"label": args.label, "scene": sim_cfg.scene, "model": args.model if cnn else None,
                "settings": dataclasses.asdict(settings) if not cnn else None,
                "profile": args.profile,
                "throttle_scale": args.throttle_scale, **summary}

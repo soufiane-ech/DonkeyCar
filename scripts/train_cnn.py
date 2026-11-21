@@ -3,6 +3,8 @@ Train the CNN driver on recorded sessions (CPU).
 
     python scripts/train_cnn.py                                  # every valid session in data/raw
     python scripts/train_cnn.py --init models/cnn.pt --epochs 4 --lr 5e-4 --out models/cnn_new.pt  # fine-tune after a DAgger round
+    # several tracks: mirror + colour/shadow augmentation, every track weighted equally
+    python scripts/train_cnn.py data/raw/*multi* --flip --color --balance --out models/cnn_multi_v1.pt
 
 Targets: steering (MSE), throttle (MSE), brake on/off (binary cross-entropy).
 Validation = the last 15 % of each session (time-wise, so neighbouring
@@ -45,16 +47,41 @@ def load_one(p: Path):
     return X, V, Y
 
 
+def scene_of(p: Path) -> str:
+    return json.loads((p / "meta.json").read_text(encoding="utf-8")).get("scene", "?")
+
+
 def load(paths, val_frac):
-    Xs, Vs, Ys, vals = [], [], [], []
+    Xs, Vs, Ys, vals, scenes = [], [], [], [], []
     for p in paths:
         t = time.time()
         X, V, Y = load_one(p)
         n = len(X)
         Xs.append(X), Vs.append(V), Ys.append(Y)
         vals.append(np.arange(n) >= n * (1 - val_frac))
-        print(f"  {p.name}: {n} frames ({time.time() - t:.0f} s)")
-    return np.concatenate(Xs), np.concatenate(Vs), np.concatenate(Ys), np.concatenate(vals)
+        scenes.append(np.full(n, scene_of(p)))
+        print(f"  {p.name}: {n} frames, {scenes[-1][0]} ({time.time() - t:.0f} s)")
+    return (np.concatenate(Xs), np.concatenate(Vs), np.concatenate(Ys), np.concatenate(vals),
+            np.concatenate(scenes))
+
+
+def augment(x, y, flip: bool, color: bool):
+    """In-place training augmentation on a float batch x (B,3,H,W) and labels y (B,3)."""
+    b = len(x)
+    if flip:   # mirror image <-> opposite steering (removes any left/right bias of a track)
+        m = torch.rand(b) < 0.5
+        x[m] = x[m].flip(-1)
+        y[m, 0] = -y[m, 0]
+    if color:
+        x.mul_(torch.empty(b, 3, 1, 1).uniform_(0.8, 1.2))          # per-channel colour cast
+        g = x.mean(1, keepdim=True)                                  # saturation 0.5..1.5
+        x.copy_(g + (x - g) * torch.empty(b, 1, 1, 1).uniform_(0.5, 1.5))
+        w = x.shape[-1]                                              # shadow: dark vertical band
+        for i in torch.nonzero(torch.rand(b) < 0.3)[:, 0].tolist():
+            a = int(torch.randint(0, w - 20, (1,)))
+            x[i, :, :, a:a + int(torch.randint(20, w // 2, (1,)))] *= float(torch.empty(1).uniform_(0.4, 0.8))
+        x.add_(torch.randn_like(x) * 0.02)                           # sensor noise
+    x.clamp_(0, 1)
 
 
 def main() -> int:
@@ -68,6 +95,9 @@ def main() -> int:
                     help="binary: on/off at 0.3 (v3 model); regression: brake amount 0..1")
     ap.add_argument("--init", default=None, help="start from this checkpoint (matching layers only)")
     ap.add_argument("--out", default=str(PROJECT_ROOT / "models" / "cnn.pt"))
+    ap.add_argument("--flip", action="store_true", help="random left/right mirror (steering negated)")
+    ap.add_argument("--color", action="store_true", help="colour cast, saturation, shadows, noise")
+    ap.add_argument("--balance", action="store_true", help="each track (scene) gets the same weight")
     args = ap.parse_args()
     torch.set_num_threads(4)
     torch.manual_seed(0)
@@ -76,10 +106,18 @@ def main() -> int:
         p for p in DATA_RAW_DIR.glob("*") if (p / "meta.json").is_file())
     paths = [p for p in paths if validate_session(p, decode_every=200)["ok"]]
     print(f"Loading {len(paths)} session(s)")
-    X, V, Y, is_val = load(paths, args.val)
+    X, V, Y, is_val, S = load(paths, args.val)
     if args.brake_mode == "binary":
         Y[:, 2] = (Y[:, 2] > 0).astype(np.float32)
     tr, va = np.where(~is_val)[0], np.where(is_val)[0]
+    scene_names = sorted(str(sc) for sc in set(S))
+    for sc in scene_names:
+        print(f"  scene {sc}: {int((S[tr] == sc).sum())} train / {int((S[va] == sc).sum())} val")
+    p_tr = None
+    if args.balance:   # sampling probability so every scene contributes equally per epoch
+        cnt = {sc: (S[tr] == sc).sum() for sc in scene_names}
+        p_tr = np.array([1.0 / cnt[sc] for sc in S[tr]])
+        p_tr /= p_tr.sum()
     print(f"{len(tr)} train / {len(va)} val frames, brake frames: {int((Y[:, 2] > 0).sum())}")
 
     model = DriveNet()
@@ -92,15 +130,19 @@ def main() -> int:
     opt = torch.optim.Adam(model.parameters(), lr=args.lr)
     sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, args.epochs)
     rng = np.random.default_rng(0)
+    # lowest speed at which the teacher brakes (5th percentile) -> CnnDriver rule
+    min_brake_speed = round(float(np.percentile(V[Y[:, 2] > 0, 0] * SPEED_SCALE, 5)), 2)         if (Y[:, 2] > 0).any() else None
+    print(f"teacher brakes above speed {min_brake_speed}")
     pos = max(1.0, float((Y[tr, 2] > 0).sum()))
     brake_pos_weight = torch.tensor((len(tr) - pos) / pos)   # brake frames are rare
 
     def batch_loss(idx, train):
         x = to_tensor(X[idx])
+        y = torch.from_numpy(Y[idx].copy())
         if train:   # brightness / contrast jitter (sim lighting is randomized)
             x = (x * torch.empty(len(idx), 1, 1, 1).uniform_(0.7, 1.3)
                  + torch.empty(len(idx), 1, 1, 1).uniform_(-0.1, 0.1)).clamp_(0, 1)
-        y = torch.from_numpy(Y[idx])
+            augment(x, y, args.flip, args.color)
         steer, thr, brake_logit = model(x, torch.from_numpy(V[idx]))
         ls = F.mse_loss(steer[:, 0], y[:, 0])
         lt = F.mse_loss(thr[:, 0], y[:, 1])
@@ -117,9 +159,9 @@ def main() -> int:
     for ep in range(args.epochs):
         t = time.time()
         model.train()
-        rng.shuffle(tr)
-        for i in range(0, len(tr), args.batch):
-            loss, _ = batch_loss(tr[i:i + args.batch], True)
+        order = rng.choice(tr, len(tr), p=p_tr) if p_tr is not None else rng.permutation(tr)
+        for i in range(0, len(order), args.batch):
+            loss, _ = batch_loss(order[i:i + args.batch], True)
             opt.zero_grad()
             loss.backward()
             opt.step()
@@ -128,19 +170,33 @@ def main() -> int:
         with torch.no_grad():
             parts = [(len(va[i:i + 256]), batch_loss(va[i:i + 256], False)[1]) for i in range(0, len(va), 256)]
         vs, vt, vb, vacc = (sum(n * m[k] for n, m in parts) / len(va) for k in range(4))
+        per_scene = {}
+        with torch.no_grad():
+            for sc in scene_names:
+                v_sc = va[S[va] == sc]
+                if len(v_sc):
+                    ms = [(len(v_sc[i:i + 256]), batch_loss(v_sc[i:i + 256], False)[1]) for i in range(0, len(v_sc), 256)]
+                    per_scene[sc] = sum(n * m[0] for n, m in ms) / len(v_sc)
+        if args.balance and per_scene:   # model selection: mean over tracks, not over frames
+            vs = sum(per_scene.values()) / len(per_scene)
         val = vs + 0.5 * vt + 0.1 * vb
         history.append({"epoch": ep + 1, "val_steer_mse": round(vs, 5), "val_throttle_mse": round(vt, 5),
-                        "val_brake_acc": round(vacc, 4), "seconds": round(time.time() - t, 1)})
+                        "val_brake_acc": round(vacc, 4), "seconds": round(time.time() - t, 1),
+                        "val_steer_rmse_per_scene": {k: round(v ** 0.5, 4) for k, v in per_scene.items()}})
         tag = ""
         if val < best:
             best, tag = val, "  *saved"
             torch.save({"model": model.state_dict(),
                         "meta": {"sessions": [p.name for p in paths], "epoch": ep + 1,
-                                 "brake_mode": args.brake_mode,
+                                 "brake_mode": args.brake_mode, "scenes": scene_names,
+                                 "min_brake_speed": min_brake_speed if args.balance else None,
+                                 "augment": {"flip": args.flip, "color": args.color, "balance": args.balance},
                                  "val_steer_mse": vs, "val_throttle_mse": vt, "val_brake_acc": vacc}},
                        args.out)
         print(f"epoch {ep + 1}/{args.epochs}  steer RMSE {vs ** 0.5:.3f}  throttle MSE {vt:.4f}  "
               f"brake acc {100 * vacc:.1f}%  [{time.time() - t:.0f} s]{tag}", flush=True)
+        if len(per_scene) > 1:
+            print("    steer RMSE per scene: " + ", ".join(f"{k} {v ** 0.5:.3f}" for k, v in per_scene.items()))
     Path(args.out).with_name(Path(args.out).stem + "_train.json").write_text(json.dumps(
         {"sessions": [p.name for p in paths], "train": len(tr), "val": len(va),
          "steer_std": float(Y[:, 0].std()), "history": history}, indent=2))

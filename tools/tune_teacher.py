@@ -23,7 +23,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from donkey.autopilot import AutopilotSettings, TrackAutopilot   # noqa: E402
-from donkey.config import PROJECT_ROOT                            # noqa: E402
+from donkey.config import PROJECT_ROOT, SimConfig                 # noqa: E402
 from donkey.sim_client import DonkeyClient                        # noqa: E402
 
 START = AutopilotSettings(v_min=2.5, v_max=5.0, max_throttle=1.0, brake_gain=1.0, brake_margin=0.2,
@@ -42,6 +42,8 @@ def evaluate(client, nodes, s: AutopilotSettings, flying_laps: int, cte_max: flo
     time.sleep(1.2)
     client.flush()
     laps, lap_start, prev, visited, max_cte, ok = [], None, None, set(), 0.0, True
+    armed = False   # departure check starts once the car reached the centre line (some tracks,
+    #                 e.g. circuit_launch, start the car beside it: |cte| ~ 4 on a wide road)
     t_start = time.perf_counter()
     while len(laps) < 1 + flying_laps:
         if time.perf_counter() - t_start > 40 * (1 + flying_laps):
@@ -50,15 +52,20 @@ def evaluate(client, nodes, s: AutopilotSettings, flying_laps: int, cte_max: flo
         if tel is None:
             continue
         if lap_start is None:
-            if abs(tel.cte) > 1.0 or tel.hit != "none":      # stale values right after reset
+            if tel.hit != "none":                            # stale value right after reset
                 client.send_controls(0, 0, 0)
                 continue
             lap_start = tel.sim_time
+        if not armed:
+            armed = abs(tel.cte) < 1.0
+            if not armed and tel.sim_time - lap_start > 5.0:
+                client.send_controls(0, 0, 1)
+                return {"ok": False, "reason": "never reached the centre line", "laps": laps}
         st, th, br = pilot(tel)
         client.send_controls(st, th, br)
         if len(laps) >= 1:                       # flying laps only count for the safety margin
             max_cte = max(max_cte, abs(tel.cte))
-        if abs(tel.cte) > cte_limit or tel.hit != "none":
+        if (armed and abs(tel.cte) > cte_limit) or tel.hit != "none":
             client.send_controls(0, 0, 1)
             return {"ok": False, "reason": f"departure at node {tel.active_node}", "laps": laps,
                     "max_cte": round(abs(tel.cte), 2)}
@@ -84,9 +91,11 @@ def main() -> int:
     ap.add_argument("--cte-max", type=float, default=2.2)
     ap.add_argument("--params", nargs="*", default=list(STEPS))
     ap.add_argument("--init", default=None, help="start from settings in this JSON")
+    ap.add_argument("--scene", default=None, help="track to load (reloads the scene)")
+    ap.add_argument("--tag", default=None, help="output name: models/profiles/teacher_<tag>.json")
     args = ap.parse_args()
 
-    stamp = f"{datetime.now():%Y-%m-%d_%H-%M-%S}"
+    stamp = args.tag or f"{datetime.now():%Y-%m-%d_%H-%M-%S}"
     out = PROJECT_ROOT / "models" / "profiles" / f"teacher_{stamp}.json"
     log = PROJECT_ROOT / "docs" / "experiments" / f"tune_{stamp}.jsonl"
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -96,10 +105,12 @@ def main() -> int:
 
     def save(best_s, best):
         out.write_text(json.dumps({"settings": dataclasses.asdict(best_s), "profile": None,
-                                   "best": best, "tuned_params": args.params}, indent=1))
+                                   "best": best, "tuned_params": args.params,
+                                   "scene": sim_cfg.scene}, indent=1))
 
-    with DonkeyClient() as client:
-        client.start()
+    sim_cfg = SimConfig(scene=args.scene) if args.scene else SimConfig()
+    with DonkeyClient(sim_cfg) as client:
+        client.start(force_reload=bool(args.scene))
         first = client.get_frame(timeout=2.0)
         nodes = client.fetch_track(first.total_nodes)
         evals = 0
@@ -116,6 +127,12 @@ def main() -> int:
             return r
 
         best = run(best_s, "start")
+        for _ in range(4):          # start too fast for this track: slow it down by 15 %
+            if best["ok"]:
+                break
+            best_s = dataclasses.replace(best_s, v_min=round(best_s.v_min * 0.85, 3),
+                                         v_max=round(best_s.v_max * 0.85, 3))
+            best = run(best_s, f"slower v_max={best_s.v_max}")
         if not best["ok"]:
             print("start settings not valid; stopping")
             return 1

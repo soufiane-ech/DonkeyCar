@@ -64,6 +64,12 @@ class CnnDriver:
         # "binary": brake on/off at BRAKE_VALUE (models up to cnn.pt v3)
         # "regression": third output = brake amount in [0, 1] (sigmoid)
         self.brake_mode = self.meta.get("brake_mode", "binary")
+        # The teacher never brakes below its minimum target speed; models that store
+        # this speed (multi-track models) apply the same rule. Without it the CNN can
+        # brake to a stop in a corner it usually reaches at speed (generated_track,
+        # node 7 after the start) and stay stopped: the image no longer changes.
+        # Older models (cnn_fast_v1, ...) have no such field -> unchanged behaviour.
+        self.min_brake_speed = self.meta.get("min_brake_speed")
 
     @torch.no_grad()
     def __call__(self, tel):
@@ -75,4 +81,6 @@ class CnnDriver:
             brake = p if p > 0.05 else 0.0
         else:
             brake = BRAKE_VALUE if p > BRAKE_THRESHOLD else 0.0
+        if self.min_brake_speed is not None and tel.speed < self.min_brake_speed:
+            brake = 0.0
         return float(steer[0, 0]), 0.0 if brake else float(thr[0, 0]), brake
